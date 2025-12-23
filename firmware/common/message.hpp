@@ -141,6 +141,11 @@ class Message {
         FlexStats = 83,
         FlexConfigure = 84,
         FlexDebug = 85,
+        SSTVRXConfigure = 86,
+        SSTVRXProgress = 87,
+        SSTVRXPhaseSlant = 88,
+        SSTVRXCalibration = 89,
+        SubCarData = 90,
         MAX
     };
 
@@ -1144,6 +1149,62 @@ class SSTVConfigureMessage : public Message {
     const uint32_t pixel_duration;
 };
 
+class SSTVRXConfigureMessage : public Message {
+   public:
+    constexpr SSTVRXConfigureMessage(
+        const uint8_t code)
+        : Message{id : ID::SSTVRXConfigure},
+          code(code) {
+    }
+
+    const uint8_t code;
+};
+
+class SSTVRXProgressMessage : public Message {
+   public:
+    constexpr SSTVRXProgressMessage(
+        const uint16_t line,
+        const uint16_t total_lines)
+        : Message{ID::SSTVRXProgress},
+          line(line),
+          total_lines(total_lines) {
+    }
+
+    const uint16_t line;
+    const uint16_t total_lines;
+};
+
+class SSTVRXPhaseSlantMessage : public Message {
+   public:
+    constexpr SSTVRXPhaseSlantMessage(
+        const int16_t phase,
+        const int16_t slant)
+        : Message{ID::SSTVRXPhaseSlant},
+          phase(phase),
+          slant(slant) {
+    }
+
+    const int16_t phase;
+    const int16_t slant;
+};
+
+class SSTVRXCalibrationMessage : public Message {
+   public:
+    constexpr SSTVRXCalibrationMessage(
+        const int16_t suggested_phase,
+        const int16_t suggested_slant,
+        const uint16_t sync_count)
+        : Message{ID::SSTVRXCalibration},
+          suggested_phase(suggested_phase),
+          suggested_slant(suggested_slant),
+          sync_count(sync_count) {
+    }
+
+    const int16_t suggested_phase;  // Suggested phase correction in pixels
+    const int16_t suggested_slant;  // Suggested slant correction in 0.1% units
+    const uint16_t sync_count;      // Number of syncs analyzed
+};
+
 class FSKConfigureMessage : public Message {
    public:
     constexpr FSKConfigureMessage(
@@ -1617,6 +1678,25 @@ class FlexDebugMessage : public Message {
     uint32_t val1;
     uint32_t val2;
     char text[64];
+};
+
+class SubCarDataMessage : public Message {
+   public:
+    constexpr SubCarDataMessage(
+        uint8_t sensorType = 0,
+        uint16_t bits = 0,
+        uint64_t data = 0,
+        uint64_t data2 = 0)
+        : Message{ID::SubCarData},
+          sensorType{sensorType},
+          bits{bits},
+          data{data},
+          data2{data2} {
+    }
+    uint8_t sensorType = 0;
+    uint16_t bits = 0;
+    uint64_t data = 0;
+    uint64_t data2 = 0;
 };
 
 #endif /*__MESSAGE_H__*/

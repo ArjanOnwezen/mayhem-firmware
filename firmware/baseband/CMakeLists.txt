@@ -651,6 +651,13 @@ set(MODE_CPPSRC
 )
 DeclareTargets(PSTX sstvtx)
 
+### SSTV RX
+
+set(MODE_CPPSRC
+	proc_sstvrx.cpp
+)
+DeclareTargets(PSRX sstvrx)
+
 ### TPMS
 
 set(MODE_CPPSRC
@@ -696,6 +703,13 @@ set(MODE_CPPSRC
 	proc_audiotx.cpp
 )
 DeclareTargets(PATX audio_tx)
+
+### SubCar Decoders
+
+set(MODE_CPPSRC
+	proc_subcar.cpp
+)
+DeclareTargets(PSCD subcar)
 
 
 ### HackRF "factory" firmware

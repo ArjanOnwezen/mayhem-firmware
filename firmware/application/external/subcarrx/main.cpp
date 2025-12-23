@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2025 timelf123
- * with barely any help from RocketGod but I exist.
+ * Copyright (C) 2026 HTotoo
  *
  * This file is part of PortaPack.
  *
@@ -20,65 +19,63 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "ui.hpp"
-#include "ui_flex_rx.hpp"
+#include "ui_subcar.hpp"
 #include "ui_navigation.hpp"
 #include "external_app.hpp"
 
-namespace ui::external_app::flex_rx {
+namespace ui::external_app::subcarrx {
 void initialize_app(ui::NavigationView& nav) {
-    nav.push<FlexAppView>();
+    nav.push<SubCarView>();
 }
-}  // namespace ui::external_app::flex_rx
-
+}  // namespace ui::external_app::subcarrx
 extern "C" {
 
-__attribute__((section(".external_app.app_flex_rx.application_information"), used)) application_information_t _application_information_flex_rx = {
+__attribute__((section(".external_app.app_subcarrx.application_information"), used)) application_information_t _application_information_subcarrx = {
     /*.memory_location = */ (uint8_t*)0x00000000,
-    /*.externalAppEntry = */ ui::external_app::flex_rx::initialize_app,
+    /*.externalAppEntry = */ ui::external_app::subcarrx::initialize_app,
     /*.header_version = */ CURRENT_HEADER_VERSION,
     /*.app_version = */ VERSION_MD5,
 
-    /*.app_name = */ "FLEX RX",
+    /*.app_name = */ "SubCar",
     /*.bitmap_data = */ {
-        0x00,
-        0x00,
-        0xFE,
-        0x7F,
-        0x02,
-        0x40,
-        0xFA,
-        0x5F,
-        0x02,
-        0x40,
-        0xF2,
-        0x4F,
-        0x02,
-        0x40,
-        0xE2,
-        0x47,
-        0x02,
-        0x40,
-        0xC2,
-        0x43,
-        0x02,
-        0x40,
-        0x82,
-        0x41,
-        0x02,
-        0x40,
-        0xFE,
-        0x7F,
-        0x00,
-        0x00,
-        0x00,
-        0x00,
+        0xC0,
+        0x03,
+        0xE0,
+        0x07,
+        0x30,
+        0x0C,
+        0x30,
+        0x0C,
+        0x30,
+        0x0C,
+        0x30,
+        0x0C,
+        0xE0,
+        0x07,
+        0xC0,
+        0x03,
+        0x80,
+        0x01,
+        0x80,
+        0x01,
+        0x80,
+        0x01,
+        0x80,
+        0x01,
+        0x80,
+        0x07,
+        0x80,
+        0x03,
+        0x80,
+        0x07,
+        0x80,
+        0x01,
     },
-    /*.icon_color = */ ui::Color::cyan().v,
+    /*.icon_color = */ ui::Color::orange().v,
     /*.menu_location = */ app_location_t::RX,
     /*.desired_menu_position = */ -1,
 
-    /*.m4_app_tag = portapack::spi_flash::image_tag_flex */ {'P', 'F', 'L', 'X'},
+    /*.m4_app_tag = portapack::spi_flash::image_tag_acars */ {'P', 'S', 'C', 'D'},
     /*.m4_app_offset = */ 0x00000000,  // will be filled at compile time
 };
 }
