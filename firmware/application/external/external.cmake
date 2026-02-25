@@ -83,6 +83,10 @@ set(EXTCPPSRC
 	external/tpmsrx/main.cpp
 	external/tpmsrx/tpms_app.cpp
 
+	#tpmstx 800 bytes - TPMS transmit with editable fields
+	external/tpmstx/main.cpp
+	external/tpmstx/tpms_tx_app.cpp
+
 	#protoview 8 byte
 	external/protoview/main.cpp
 	external/protoview/ui_protoview.cpp
@@ -109,8 +113,8 @@ set(EXTCPPSRC
 	external/random_password/sha512.cpp
 
 	#acars
-	#external/acars_rx/main.cpp
-	#external/acars_rx/acars_app.cpp
+	external/acars_rx/main.cpp
+	external/acars_rx/acars_app.cpp
 
 	#wefax_rx 192 bytes
 	external/wefax_rx/main.cpp
@@ -285,11 +289,6 @@ set(EXTCPPSRC
 	external/siggen/main.cpp
 	external/siggen/ui_siggen.cpp
 
-	#sdusb
-	external/sdusb/main.cpp
-	external/sdusb/ui_sd_over_usb.cpp
-
-
 	#morse_radio
 	external/morse_radio/main.cpp
 	external/morse_radio/ui_morse_radio.cpp
@@ -297,6 +296,22 @@ set(EXTCPPSRC
 	#morseradiotx
 	external/morseradiotx/main.cpp
 	external/morseradiotx/ui_morse_radiotx.cpp
+
+  external/keeloqtx/main.cpp
+  external/keeloqtx/ui_keeloqtx.cpp
+	#rtty_rx
+	external/rtty_rx/main.cpp
+	external/rtty_rx/ui_rtty_rx.cpp
+	external/rtty_rx/baudot.cpp
+
+	#rtty_tx
+	external/rtty_tx/main.cpp
+	external/rtty_tx/ui_rtty_tx.cpp
+	external/rtty_tx/baudot.cpp
+
+    #pocsag_tx
+	external/pocsag_tx/main.cpp
+	external/pocsag_tx/ui_pocsag_tx.cpp
 )
 
 set(EXTAPPLIST
@@ -319,13 +334,14 @@ set(EXTAPPLIST
 	audio_test
 	wardrivemap
 	tpmsrx
+	tpmstx
 	protoview
 	adsbtx
 	#morse_tx
 	sstvtx
 	sstvrx
 	random_password
-	# acars_rx --not working
+	acars_rx
 	wefax_rx
 	noaaapt_rx
 	shoppingcart_lock
@@ -368,7 +384,20 @@ set(EXTAPPLIST
 	flex_rx
 	subcarrx
 	siggen
-	sdusb
 	morse_radio
 	morseradiotx
+  keeloqtx
+	rtty_rx
+	rtty_tx
+	pocsag_tx
 )
+
+# sdusb has type conflicts with PRALINE (HackRF Pro) - add only for non-PRALINE builds
+if(NOT BOARD STREQUAL "PRALINE")
+       list(APPEND EXTCPPSRC
+               external/sdusb/main.cpp
+               external/sdusb/ui_sd_over_usb.cpp
+       )
+       list(APPEND EXTAPPLIST sdusb)
+endif()
+

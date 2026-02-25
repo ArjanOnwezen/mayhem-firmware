@@ -52,12 +52,21 @@ static void send_message(const Message* const message) {
     creg::m0apptxevent::assert_event();
 
     if constexpr (check_for_message_hang) {
+#ifdef PRALINE
+        /* Timeout: ~3 seconds at typical clock speeds */
+        auto count = 200'000'000u;
+#else
         auto count = UINT32_MAX;
+#endif
         while (shared_memory.baseband_message && --count)
             /* spin */;
 
         if (count == 0)
+#ifdef PRALINE
+            chDbgPanic("BB Msg Timeout");
+#else
             chDbgPanic("Baseband Send Fail");
+#endif
     } else {
         while (shared_memory.baseband_message)
             /* spin */;
@@ -388,6 +397,21 @@ void set_bitstream_config(uint32_t deviation, uint8_t mode) {
     send_message(&message);
 }
 
+void set_rtty_config(uint16_t baud, uint16_t shift, uint8_t* payload, uint16_t payload_length) {
+    RTTYDataMessage message{baud, shift};
+    if (payload && payload_length > 0) {
+        message.data_len = payload_length > message.max_len ? message.max_len : payload_length;
+        for (size_t i = 0; i < message.data_len; ++i) {
+            message.data[i] = payload[i];
+        }
+    }
+    send_message(&message);
+}
+
+void set_rtty_config(RTTYDataMessage& message) {
+    send_message(&message);
+}
+
 static bool baseband_image_running = false;
 
 void run_image(const spi_flash::image_tag_t image_tag) {
@@ -449,7 +473,12 @@ void shutdown() {
     send_message(&message);
 
     shared_memory.application_queue.reset();
-
+    // Allow time for the shutdown message to be processed and for the baseband
+    // core to stop before starting another image. Otherwise, the M4 may still be
+    // running and cause a crash when the next image is started.
+#ifdef PRALINE
+    chThdSleepMilliseconds(20);
+#endif
     baseband_image_running = false;
 }
 

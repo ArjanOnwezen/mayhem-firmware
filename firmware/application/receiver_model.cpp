@@ -34,6 +34,12 @@
 #include "dsp_iir_config.hpp"
 #include "utility.hpp"
 
+#ifdef PRALINE
+extern "C" {
+#include "fpga_bridge.h"
+}
+#endif
+
 using namespace hackrf::one;
 using namespace portapack;
 
@@ -57,9 +63,10 @@ static constexpr std::array<baseband::AMConfig, 12> am_configs{{
     {taps_6k0_narrow_decim_1, taps_6k0_decim_2, taps_2k6_usb_wefax_channel, AMConfigureMessage::Modulation::SSB_FM, apt_audio_12k_lpf_1500hz_config, (int)AMConfigureMessage::Zoom_waterfall::ZOOM_x_2},  // SSB USB+FM  to demod. Subcarrier FM Audio Tones to get APT Weather Fax with waterfall zoom x 2 (we need taps_6k0_narrow_decim_1 to minimize aliasing)
 }};
 
-static constexpr std::array<baseband::NBFMConfig, 3> nbfm_configs{{
+static constexpr std::array<baseband::NBFMConfig, 4> nbfm_configs{{
     {taps_4k25_decim_0, taps_4k25_decim_1, taps_4k25_channel, 2500},
     {taps_11k0_decim_0, taps_11k0_decim_1, taps_11k0_channel, 2500},
+    {taps_12k5_decim_0, taps_12k5_decim_1, taps_12k5_channel, 2500},
     {taps_16k0_decim_0, taps_16k0_decim_1, taps_16k0_channel, 5000},
 }};
 
@@ -303,8 +310,20 @@ int32_t ReceiverModel::tuning_offset() {
 
 void ReceiverModel::update_tuning_frequency() {
     // TODO: use positive offset if freq < offset.
-    if (enabled_)
+    if (enabled_) {
         radio::set_tuning_frequency(target_frequency() + hidden_offset + tuning_offset());
+
+#ifdef PRALINE
+        /* Praline: Must re-apply baseband filter after frequency change
+         * Reference: hackrf_usb radio.c radio_set_frequency()
+         *
+         * Different frequency ranges may use different quarter-shift modes,
+         * which affects the required LPF bandwidth. For now we just
+         * recalculate the filter to be safe.
+         */
+        update_baseband_bandwidth();
+#endif
+    }
 }
 
 void ReceiverModel::set_hidden_offset(rf::Frequency offset) {
@@ -313,8 +332,28 @@ void ReceiverModel::set_hidden_offset(rf::Frequency offset) {
 }
 
 void ReceiverModel::update_baseband_bandwidth() {
-    if (enabled_)
+    if (enabled_) {
+#ifdef PRALINE
+        /* Praline: LPF bandwidth calculation
+         * Reference: hackrf_usb radio.c radio_set_filter()
+         *
+         * LPF = (sample_rate * 3) / 8
+         * Plus additional offset if quarter-shift is enabled (not implemented yet)
+         */
+        uint32_t lpf_bandwidth = (sampling_rate() * 3) / 8;
+
+        // For now, quarter-shift is disabled, so no offset added
+        // When quarter-shift is implemented:
+        // if (quarter_shift_enabled) {
+        //     uint32_t offset = (sampling_rate() << decimation_n) / 8;
+        //     lpf_bandwidth += offset * 2;
+        // }
+
+        radio::set_baseband_filter_bandwidth_rx(lpf_bandwidth);
+#else
         radio::set_baseband_filter_bandwidth_rx(baseband_bandwidth());
+#endif
+    }
 }
 
 void ReceiverModel::update_sampling_rate() {
@@ -323,9 +362,9 @@ void ReceiverModel::update_sampling_rate() {
     // protocols that need quick RX/TX turn-around.
 
     // Disabling baseband while changing sampling rates seems like a good idea...
-    if (enabled_)
+    if (enabled_) {
         radio::set_baseband_rate(sampling_rate());
-
+    }
     update_tuning_frequency();
 }
 
