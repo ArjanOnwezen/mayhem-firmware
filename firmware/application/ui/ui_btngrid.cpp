@@ -294,8 +294,8 @@ bool BtnGridView::set_highlighted(int32_t new_value, bool force_update) {
     }
 
     // Normalize offset to show maximum items when count decreased
-    if (offset + displayed_max > item_count && item_count > 0) {
-        if (item_count >= displayed_max) {
+    if (item_count > 0 && offset + displayed_max > static_cast<size_t>(item_count)) {
+        if (static_cast<size_t>(item_count) >= displayed_max) {
             offset = item_count - displayed_max;
         } else {
             offset = 0;
@@ -307,7 +307,7 @@ bool BtnGridView::set_highlighted(int32_t new_value, bool force_update) {
         update_items();
     }
 
-    if (visible()) {
+    if (drawn()) {
         size_t idx = highlighted_item - offset;
         if (idx < menu_item_views.size())
             item_view(idx)->focus();
@@ -449,7 +449,7 @@ void BtnGridView::page_up() {
         update_items();
 
         if (was_visible) {
-            if (visible()) {
+            if (drawn()) {
                 size_t idx = highlighted_item - offset;
                 if (idx < menu_item_views.size())
                     item_view(idx)->focus();
@@ -488,7 +488,7 @@ void BtnGridView::page_down() {
         update_items();
 
         if (was_visible) {
-            if (visible()) {
+            if (drawn()) {
                 size_t idx = highlighted_item - offset;
                 if (idx < menu_item_views.size())
                     item_view(idx)->focus();

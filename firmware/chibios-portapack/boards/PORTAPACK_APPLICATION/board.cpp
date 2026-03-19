@@ -542,6 +542,50 @@ static const std::array<scu_setup_t, 9> pins_setup_r9 { {
 
 #endif
 
+#ifdef PRALINE
+
+static const std::array<scu_setup_t, 30> pins_setup_portapack { {
+    {  2,  0, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* U0_TXD: PortaPack P2_0/IO_STBX */
+    {  2,  1, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* U0_RXD: PortaPack P2_1/ADDR */
+    {  2,  3, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* I2C1_SDA: PortaPack P2_3/LCD_TE */
+    {  2,  4, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* I2C1_SCL: PortaPack P2_4/LCD_RDX */
+    {  2,  8, scu_config_normal_drive_t { .mode=1, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* P2_8: 10K PD, BOOT2, DFU switch, PortaPack P2_8/<unused> */
+    {  2,  9, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* P2_9: 10K PD, BOOT3, PortaPack P2_9/LCD_WRX */
+    {  2, 13, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* P2_13: PortaPack P2_13/DIR */
+    {  7,  0, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_8: PortaPack GPIO3_8(IO) */
+    {  7,  1, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_9: PortaPack GPIO3_9(IO) */
+    {  7,  2, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_10: PortaPack GPIO3_10(IO) */
+    {  7,  3, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_11: PortaPack GPIO3_11(IO) */
+    {  7,  4, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_12: PortaPack GPIO3_12(IO) */
+    {  7,  5, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_13: PortaPack GPIO3_13(IO) */
+    {  7,  6, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_14: PortaPack GPIO3_14(IO) */
+    {  7,  7, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* GPIO3_15: PortaPack GPIO3_15(IO) */
+
+    /* PortaPack: Audio */
+    {  3,  0, scu_config_normal_drive_t { .mode=2, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=0 } }, /* I2S0_TX_SCK: PortaPack I2S0_TX_SCK(I) */
+    {  3,  1, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=0 } }, /* I2S0_RX_WS: PortaPack I2S0_TX_WS(I). Input enabled to fold back into RX. */
+    {  3,  2, scu_config_normal_drive_t { .mode=0, .epd=0, .epun=0, .ehs=0, .ezi=0, .zif=0 } }, /* I2S0_RX_SDA: PortaPack I2S0_TX_SDA(I) */
+    { 24,  2, scu_config_normal_drive_t { .mode=6, .epd=1, .epun=1, .ehs=0, .ezi=0, .zif=0 } }, /* I2S0_TX_CLK: PortaPack I2S0_TX_MCLK */
+
+    /* PortaPack: SD card socket */
+    { 24,  0, scu_config_normal_drive_t { .mode=4, .epd=1, .epun=1, .ehs=0, .ezi=1, .zif=1 } }, /* SD_CLK: PortaPack SD.CLK, enable input buffer for timing feedback? */
+    {  1,  6, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_CMD: PortaPack SD.CMD(IO)  */
+    {  1,  9, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_DAT0: PortaPack SD.DAT0(IO) */
+    {  1, 10, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_DAT1: PortaPack SD.DAT1(IO) */
+    {  1, 11, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_DAT2: PortaPack SD.DAT2(IO) */
+    {  1, 12, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_DAT3: PortaPack SD.DAT3(IO) */
+    {  1, 13, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=0 } }, /* SD_CD: PortaPack SD.CD(O) */
+
+    // for pro touch
+    // those pins should choose reserved function mode
+    // and the behavior same as hackrf one(YN YP XN XP)
+    { 11,  6, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=0, .zif=0 } }, /* PB_6:  ADC0_0 yp*/
+    {  4,  5, scu_config_normal_drive_t { .mode=3, .epd=0, .epun=0, .ehs=0, .ezi=0, .zif=0 } }, /* P4_5:  ADC0_2 yn*/
+    {  4,  4, scu_config_normal_drive_t { .mode=3, .epd=0, .epun=0, .ehs=0, .ezi=0, .zif=0 } }, /* P4_4:  ADC0_5 xp */
+    { 15,  4, scu_config_normal_drive_t { .mode=3, .epd=0, .epun=0, .ehs=0, .ezi=0, .zif=0 } }, /* PF_4:  ADC0_6 xn*/
+} };
+
+#else
 static const std::array<scu_setup_t, 26> pins_setup_portapack { {
     {  2,  0, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* U0_TXD: PortaPack P2_0/IO_STBX */
     {  2,  1, scu_config_normal_drive_t { .mode=4, .epd=0, .epun=1, .ehs=0, .ezi=1, .zif=0 } }, /* U0_RXD: PortaPack P2_1/ADDR */
@@ -574,6 +618,7 @@ static const std::array<scu_setup_t, 26> pins_setup_portapack { {
     {  1, 12, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=1 } }, /* SD_DAT3: PortaPack SD.DAT3(IO) */
     {  1, 13, scu_config_normal_drive_t { .mode=7, .epd=0, .epun=0, .ehs=0, .ezi=1, .zif=0 } }, /* SD_CD: PortaPack SD.CD(O) */
 } };
+#endif
 
 static const std::array<scu_setup_t, 6> pins_setup_spifi { {
     {  3,  3, scu_config_normal_drive_t { .mode=3, .epd=0, .epun=1, .ehs=1, .ezi=1, .zif=1 } }, /* SPIFI_SCK: W25Q80BV.CLK(I), enable input buffer for timing feedback */
@@ -867,33 +912,8 @@ extern "C" void __late_init(void) {
  * @todo    Add your board-specific code, if any.
  */
 extern "C" void boardInit(void) {
-#ifndef PRALINE
-  /* Detect HackRF variant */
-  /* 1. Perform Standard Initialization first */
-  /* This configures VAA power, LED pins, and detects board revision */
-  /* Let detect_hackrf_r9() run - don't force for PRALINE */
-  hackrf_r9 = detect_hackrf_r9();
-  /* Configure variant-dependent pins. */
-  if (hackrf_r9) {
-    setup_gpios(gpio_setup_r9);
-    setup_pins(pins_setup_r9);
-  } else {
-    setup_gpios(gpio_setup_og);
-    setup_pins(pins_setup_og);
-  }
-
-  /* 2. Turn on VAA (Critical for Radio/Transceiver) */
-  vaa_power_on();
-
-  /* 3. Handle VAA Enable Pin Latching */
-  if (hackrf_r9) {
-    LPC_GPIO->W2[9] = 1;
-  } else {
-    LPC_GPIO->W3[6] = 1;
-  }
-
-  /* 4. HackRF Pro Specific: Initialize and Load FPGA */
-#else
+#ifdef PRALINE
+  /* HackRF Pro Specific: Initialize and Load FPGA */
   hackrf_r9 = false;
   /* Enable 3.3V aux power - P6_7 = GPIO5[15], active LOW (clear to enable) */
   LPC_SCU->SFSP[6][7] = 0xF4;  /* SCU_GPIO_FAST | FUNCTION4 */
@@ -1047,6 +1067,32 @@ extern "C" void boardInit(void) {
   // PRALINE LEDs are active-low: SET (HIGH) = OFF, CLR (LOW) = ON
   LPC_GPIO->SET[2] = (1 << 1) | (1 << 2) | (1 << 8);
   { volatile uint32_t delay = 200000; while(delay--); }
+
+#else
+
+  /* Detect HackRF variant */
+  /* 1. Perform Standard Initialization first */
+  /* This configures VAA power, LED pins, and detects board revision */
+  /* Let detect_hackrf_r9() run - don't force for PRALINE */
+  hackrf_r9 = detect_hackrf_r9();
+  /* Configure variant-dependent pins. */
+  if (hackrf_r9) {
+    setup_gpios(gpio_setup_r9);
+    setup_pins(pins_setup_r9);
+  } else {
+    setup_gpios(gpio_setup_og);
+    setup_pins(pins_setup_og);
+  }
+
+  /* 2. Turn on VAA (Critical for Radio/Transceiver) */
+  vaa_power_on();
+
+  /* 3. Handle VAA Enable Pin Latching */
+  if (hackrf_r9) {
+    LPC_GPIO->W2[9] = 1;
+  } else {
+    LPC_GPIO->W3[6] = 1;
+  }
 
 #endif
 
